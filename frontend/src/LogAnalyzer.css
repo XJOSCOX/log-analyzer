@@ -1,0 +1,123 @@
+.log-analyzer-container {
+  max-width: 650px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px 0 rgba(55,60,130,0.09);
+  padding: 2.2rem 2rem;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+h2, h3 {
+  text-align: center;
+  color: #293155;
+}
+
+.file-input {
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+.analyze-btn {
+  padding: 0.55rem 1.35rem;
+  border: none;
+  background: #3857fa;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.13s;
+}
+
+.analyze-btn:hover {
+  background: #2537c1;
+}
+
+.loading {
+  color: #4467b1;
+  font-weight: bold;
+  text-align: center;
+}
+
+.error {
+  color: #e03d41;
+  font-weight: bold;
+  text-align: center;
+}
+
+.summary {
+  background: #f5f7fa;
+  border-radius: 10px;
+  margin: 20px 0 18px 0;
+  padding: 1.2rem 1rem;
+  font-size: 1.09rem;
+}
+
+.brute-force-ip {
+  background: #ffe0e0;
+  color: #a12d2d;
+  margin-right: 7px;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.log-raw {
+  background: #f7fafc;
+  border-radius: 8px;
+  margin-top: 24px;
+  padding: 1rem 0.7rem;
+  font-size: 0.97rem;
+  overflow-x: auto;
+  max-height: 360px;
+}
+
+.highlight-failed {
+  background: #ffcccc;
+  color: #b60d0d;
+  font-weight: 600;
+}
+
+.highlight-sensitive {
+  background: #fff2b6;
+  color: #bd9700;
+  font-weight: 600;
+}
+
+.highlight-sqli {
+  background: #ffe5f3;
+  color: #a30074;
+  font-weight: 600;
+}
+.highlight-xss {
+  background: #e5f5ff;
+  color: #0071a3;
+  font-weight: 600;
+}
+.highlight-dir {
+  background: #faf1c5;
+  color: #b08b00;
+  font-weight: 600;
+}
+.highlight-agent {
+  background: #fbead1;
+  color: #cc7200;
+  font-weight: 600;
+}
+
+.download-btn {
+  margin: 14px auto 0 auto;
+  display: block;
+  background: #41c357;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+.download-btn:hover {
+  background: #238f33;
+}

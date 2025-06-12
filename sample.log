@@ -1,0 +1,14 @@
+Jul 10 11:12:01 host sshd[1022]: Failed password for root from 192.168.1.5 port 41564 ssh2
+Jul 10 11:12:03 host sshd[1022]: Failed password for root from 192.168.1.5 port 41565 ssh2
+Jul 10 11:12:05 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41566 ssh2
+Jul 10 11:12:07 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41567 ssh2
+Jul 10 11:12:09 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41568 ssh2
+Jul 10 11:13:11 host sshd[1023]: Accepted password for user from 192.168.1.10 port 41569 ssh2
+192.168.1.10 - - [10/Jul/2024:12:31:45 +0000] "GET /index.html HTTP/1.1" 200 2326
+203.0.113.17 - - [10/Jul/2024:12:35:42 +0000] "GET /admin HTTP/1.1" 404 504
+203.0.113.17 - - [10/Jul/2024:12:35:43 +0000] "POST /wp-login.php HTTP/1.1" 403 1543
+198.51.100.10 - - [10/Jul/2024:12:36:41 +0000] "GET /index.php?id=1 UNION SELECT username,password FROM users -- HTTP/1.1" 200 562
+198.51.100.11 - - [10/Jul/2024:12:36:43 +0000] "GET /search?q=<script>alert(1)</script> HTTP/1.1" 200 388
+198.51.100.12 - - [10/Jul/2024:12:36:45 +0000] "GET /../../../../etc/passwd HTTP/1.1" 404 322
+198.51.100.13 - - [10/Jul/2024:12:37:00 +0000] "GET / HTTP/1.1" 200 2326 "-" "sqlmap/1.4.12#stable (http://sqlmap.org)"
+192.168.1.8 - - [10/Jul/2024:12:37:05 +0000] "GET /wp-login.php HTTP/1.1" 200 543

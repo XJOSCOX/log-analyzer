@@ -1,14 +1,59 @@
-Jul 10 11:12:01 host sshd[1022]: Failed password for root from 192.168.1.5 port 41564 ssh2
-Jul 10 11:12:03 host sshd[1022]: Failed password for root from 192.168.1.5 port 41565 ssh2
-Jul 10 11:12:05 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41566 ssh2
-Jul 10 11:12:07 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41567 ssh2
-Jul 10 11:12:09 host sshd[1022]: Failed password for admin from 192.168.1.5 port 41568 ssh2
-Jul 10 11:13:11 host sshd[1023]: Accepted password for user from 192.168.1.10 port 41569 ssh2
-192.168.1.10 - - [10/Jul/2024:12:31:45 +0000] "GET /index.html HTTP/1.1" 200 2326
-203.0.113.17 - - [10/Jul/2024:12:35:42 +0000] "GET /admin HTTP/1.1" 404 504
-203.0.113.17 - - [10/Jul/2024:12:35:43 +0000] "POST /wp-login.php HTTP/1.1" 403 1543
-198.51.100.10 - - [10/Jul/2024:12:36:41 +0000] "GET /index.php?id=1 UNION SELECT username,password FROM users -- HTTP/1.1" 200 562
-198.51.100.11 - - [10/Jul/2024:12:36:43 +0000] "GET /search?q=<script>alert(1)</script> HTTP/1.1" 200 388
-198.51.100.12 - - [10/Jul/2024:12:36:45 +0000] "GET /../../../../etc/passwd HTTP/1.1" 404 322
-198.51.100.13 - - [10/Jul/2024:12:37:00 +0000] "GET / HTTP/1.1" 200 2326 "-" "sqlmap/1.4.12#stable (http://sqlmap.org)"
-192.168.1.8 - - [10/Jul/2024:12:37:05 +0000] "GET /wp-login.php HTTP/1.1" 200 543
+Jul 10 00:10:01 server1 sshd[1200]: Failed password for root from 192.168.1.12 port 50011 ssh2
+Jul 10 00:10:04 server1 sshd[1200]: Failed password for root from 192.168.1.12 port 50012 ssh2
+Jul 10 00:10:06 server1 sshd[1200]: Failed password for root from 192.168.1.12 port 50013 ssh2
+Jul 10 00:10:09 server1 sshd[1200]: Failed password for root from 192.168.1.12 port 50014 ssh2
+Jul 10 00:10:11 server1 sshd[1200]: Failed password for root from 192.168.1.12 port 50015 ssh2
+Jul 10 00:10:13 server1 sshd[1200]: Accepted password for admin from 192.168.1.50 port 34011 ssh2
+Jul 10 00:10:15 server1 sshd[1200]: Connection closed by 192.168.1.50 port 34011 [preauth]
+Jul 10 00:15:24 server1 sshd[1230]: Failed password for user1 from 203.0.113.22 port 41600 ssh2
+Jul 10 00:15:26 server1 sshd[1230]: Failed password for user1 from 203.0.113.22 port 41601 ssh2
+Jul 10 00:15:28 server1 sshd[1230]: Failed password for user1 from 203.0.113.22 port 41602 ssh2
+Jul 10 00:15:29 server1 sshd[1230]: Accepted password for user1 from 203.0.113.22 port 41603 ssh2
+Jul 10 00:15:35 server1 sshd[1231]: Failed password for admin from 198.51.100.42 port 52321 ssh2
+Jul 10 00:15:38 server1 sshd[1231]: Failed password for admin from 198.51.100.42 port 52322 ssh2
+Jul 10 00:15:41 server1 sshd[1231]: Failed password for admin from 198.51.100.42 port 52323 ssh2
+Jul 10 00:20:18 server1 sshd[1240]: Accepted password for backup from 192.168.1.100 port 33891 ssh2
+
+192.168.1.15 - - [10/Jul/2024:02:31:45 +0000] "GET /index.html HTTP/1.1" 200 2326
+192.168.1.16 - - [10/Jul/2024:02:33:02 +0000] "POST /login HTTP/1.1" 302 382
+203.0.113.17 - - [10/Jul/2024:02:35:42 +0000] "GET /admin HTTP/1.1" 404 504
+203.0.113.17 - - [10/Jul/2024:02:35:43 +0000] "POST /wp-login.php HTTP/1.1" 403 1543
+192.168.1.20 - - [10/Jul/2024:02:37:22 +0000] "GET /home HTTP/1.1" 200 1845
+203.0.113.18 - - [10/Jul/2024:02:38:15 +0000] "GET /about HTTP/1.1" 200 1100
+
+198.51.100.10 - - [10/Jul/2024:03:36:41 +0000] "GET /index.php?id=1 UNION SELECT username,password FROM users -- HTTP/1.1" 200 562
+198.51.100.11 - - [10/Jul/2024:03:36:43 +0000] "GET /search?q=<script>alert(1)</script> HTTP/1.1" 200 388
+198.51.100.12 - - [10/Jul/2024:03:36:45 +0000] "GET /../../../../etc/passwd HTTP/1.1" 404 322
+198.51.100.13 - - [10/Jul/2024:03:37:00 +0000] "GET / HTTP/1.1" 200 2326 "-" "sqlmap/1.4.12#stable (http://sqlmap.org)"
+203.0.113.19 - - [10/Jul/2024:03:38:13 +0000] "GET /index.php?id=1' OR '1'='1 HTTP/1.1" 200 487
+203.0.113.19 - - [10/Jul/2024:03:38:14 +0000] "POST /contact HTTP/1.1" 200 312
+
+192.168.1.21 - - [10/Jul/2024:03:41:09 +0000] "GET /wp-login.php HTTP/1.1" 200 533
+192.168.1.22 - - [10/Jul/2024:03:42:10 +0000] "GET /wp-login.php HTTP/1.1" 404 415
+203.0.113.20 - - [10/Jul/2024:03:43:15 +0000] "POST /submit HTTP/1.1" 200 410
+
+198.51.100.20 - - [10/Jul/2024:04:10:41 +0000] "GET /wp-login.php?id=2 UNION SELECT password FROM users -- HTTP/1.1" 200 562
+198.51.100.21 - - [10/Jul/2024:04:15:43 +0000] "GET /search?q=<svg onerror=alert(2)> HTTP/1.1" 200 388
+198.51.100.22 - - [10/Jul/2024:04:19:45 +0000] "GET /../../../../windows/system32/config SAM HTTP/1.1" 404 322
+198.51.100.23 - - [10/Jul/2024:04:21:00 +0000] "GET / HTTP/1.1" 200 2326 "-" "acunetix/v12.0 (http://www.acunetix.com/v12/)"
+198.51.100.24 - - [10/Jul/2024:04:22:13 +0000] "GET /index.php?id=1' AND sleep(5)-- HTTP/1.1" 200 489
+198.51.100.25 - - [10/Jul/2024:04:23:25 +0000] "POST /post HTTP/1.1" 200 380
+
+192.168.1.25 - - [10/Jul/2024:05:31:45 +0000] "GET /index.html HTTP/1.1" 200 2426
+192.168.1.26 - - [10/Jul/2024:05:32:12 +0000] "POST /login HTTP/1.1" 302 382
+203.0.113.30 - - [10/Jul/2024:05:35:42 +0000] "GET /admin HTTP/1.1" 404 504
+203.0.113.30 - - [10/Jul/2024:05:35:43 +0000] "POST /wp-login.php HTTP/1.1" 403 1543
+192.168.1.27 - - [10/Jul/2024:05:37:22 +0000] "GET /home HTTP/1.1" 200 1845
+
+198.51.100.26 - - [10/Jul/2024:06:01:41 +0000] "GET /index.php?id=2 UNION SELECT email FROM users -- HTTP/1.1" 200 563
+198.51.100.27 - - [10/Jul/2024:06:06:43 +0000] "GET /search?q=<img src=x onerror=alert(3)> HTTP/1.1" 200 388
+198.51.100.28 - - [10/Jul/2024:06:09:45 +0000] "GET /../../../etc/shadow HTTP/1.1" 404 322
+198.51.100.29 - - [10/Jul/2024:06:11:00 +0000] "GET / HTTP/1.1" 200 2326 "-" "nikto/2.1.5 (Evasions: None)"
+203.0.113.40 - - [10/Jul/2024:06:12:13 +0000] "GET /index.php?id=2' OR '1'='1 HTTP/1.1" 200 489
+192.168.1.28 - - [10/Jul/2024:06:13:15 +0000] "POST /profile HTTP/1.1" 200 411
+
+# Benign logins and activity
+Jul 10 07:10:01 server1 sshd[1300]: Accepted password for sysadmin from 192.168.1.100 port 60011 ssh2
+Jul 10 07:10:05 server1 sshd[1300]: Connection closed by 192.168.1.100 port 60011 [preauth]
+192.168.1.30 - - [10/Jul/2024:07:31:45 +0000] "GET /status HTTP/1.1" 200 320
+203.0.113.50 - - [10/Jul/2024:07:38:15 +0000] "GET /help HTTP/1.1" 200 1200

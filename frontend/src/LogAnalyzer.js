@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 import "./LogAnalyzer.css";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,30 +22,47 @@ ChartJS.register(
   Legend
 );
 
-function highlight(line, failedLogins, sensitiveAccess, sqlInjection, xss, dirTraversal, suspiciousAgents) {
-  if (failedLogins.some(f => f.text === line)) {
-    return <span className="highlight-failed">{line}</span>;
-  }
-  if (sensitiveAccess.some(s => s.text === line)) {
-    return <span className="highlight-sensitive">{line}</span>;
-  }
-  if (sqlInjection?.some(s => s.text === line)) {
-    return <span className="highlight-sqli">{line}</span>;
-  }
-  if (xss?.some(s => s.text === line)) {
-    return <span className="highlight-xss">{line}</span>;
-  }
-  if (dirTraversal?.some(s => s.text === line)) {
-    return <span className="highlight-dir">{line}</span>;
-  }
-  if (suspiciousAgents?.some(s => s.text === line)) {
-    return <span className="highlight-agent">{line}</span>;
+const API_URL = "http://localhost:5000/api/upload-log";
+const DOWNLOAD_URL = "http://localhost:5000/api/download-csv";
+
+// Use CSS class for badge, with severity for color (class: badge-severity)
+function severityBadge(level) {
+  return (
+    <span className={`severity-badge severity-${(level || 'info').toLowerCase()}`}>
+      {level}
+    </span>
+  );
+}
+
+// Use class highlight-log and severity for color
+function highlight(line, allFindings, lineNumber) {
+  const item = allFindings.find(f => f.text === line && f.line === lineNumber);
+  if (item) {
+    const level = item.level || "Info";
+    return (
+      <span
+        className={`highlight-log highlight-${level.toLowerCase()}`}
+        title={level}
+      >
+        {line}
+        {severityBadge(level)}
+      </span>
+    );
   }
   return line;
 }
 
-const API_URL = "http://localhost:5000/api/upload-log";
-const DOWNLOAD_URL = "http://localhost:5000/api/download-csv";
+function getAllFindings(analysis, filters) {
+  let arr = [];
+  if (!analysis) return [];
+  if (filters.failed) arr = arr.concat(analysis.failedLogins || []);
+  if (filters.sensitive) arr = arr.concat(analysis.sensitiveAccess || []);
+  if (filters.sqli) arr = arr.concat(analysis.sqlInjection || []);
+  if (filters.xss) arr = arr.concat(analysis.xss || []);
+  if (filters.dir) arr = arr.concat(analysis.dirTraversal || []);
+  if (filters.agent) arr = arr.concat(analysis.suspiciousAgents || []);
+  return arr;
+}
 
 function LogAnalyzer() {
   const [file, setFile] = useState(null);
@@ -62,6 +78,9 @@ function LogAnalyzer() {
     dir: true,
     agent: true,
   });
+  const [threshold, setThreshold] = useState(5);
+  const [search, setSearch] = useState("");
+  const [dark, setDark] = useState(false);
 
   const handleFileChange = e => {
     setFile(e.target.files[0]);
@@ -83,6 +102,7 @@ function LogAnalyzer() {
     try {
       const formData = new FormData();
       formData.append("logfile", file);
+      formData.append("threshold", threshold);
 
       const res = await axios.post(API_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -90,7 +110,7 @@ function LogAnalyzer() {
       setAnalysis(res.data.analysis);
       setLines(res.data.lines);
     } catch (err) {
-      setError(err.response?.data?.error || "Upload failed or server error.");
+      setError("Upload failed or server error.");
     } finally {
       setLoading(false);
     }
@@ -115,31 +135,29 @@ function LogAnalyzer() {
     setFilters({ ...filters, [e.target.name]: e.target.checked });
   };
 
-  const filteredLines = lines.filter(line =>
-    (filters.failed && analysis?.failedLogins?.some(f => f.text === line)) ||
-    (filters.sensitive && analysis?.sensitiveAccess?.some(s => s.text === line)) ||
-    (filters.sqli && analysis?.sqlInjection?.some(s => s.text === line)) ||
-    (filters.xss && analysis?.xss?.some(s => s.text === line)) ||
-    (filters.dir && analysis?.dirTraversal?.some(s => s.text === line)) ||
-    (filters.agent && analysis?.suspiciousAgents?.some(s => s.text === line)) ||
-    (!Object.values(filters).some(f => f)) // Show all if no filters selected
-  );
+  // Merge all findings for highlighting
+  const allFindings = getAllFindings(analysis, filters);
+
+  // Search filter
+  let displayedLines = lines;
+  if (search.trim().length > 0) {
+    displayedLines = lines.filter((line, idx) => line.includes(search) || (analysis?.failedLogins || []).some(f => f.line === idx + 1 && f.ip === search));
+  }
+
+  // Show only lines with findings if any filters are checked, or all lines otherwise
+  if (Object.values(filters).some(Boolean)) {
+    displayedLines = displayedLines.filter((line, idx) =>
+      allFindings.some(f => f.text === line && f.line === idx + 1)
+    );
+  }
 
   const LogLine = ({ index, style }) => (
     <div style={style}>
-      {highlight(
-        filteredLines[index],
-        analysis?.failedLogins || [],
-        analysis?.sensitiveAccess || [],
-        analysis?.sqlInjection || [],
-        analysis?.xss || [],
-        analysis?.dirTraversal || [],
-        analysis?.suspiciousAgents || []
-      )}
+      <span style={{ opacity: 0.4, marginRight: 6 }}>{displayedLines.length > 0 ? lines.indexOf(displayedLines[index]) + 1 : ""}.</span>
+      {highlight(displayedLines[index], allFindings, lines.indexOf(displayedLines[index]) + 1)}
     </div>
   );
 
-  // Chart data for threat severity
   const chartData = {
     labels: ["Critical", "High", "Medium", "Low"],
     datasets: [
@@ -151,7 +169,7 @@ function LogAnalyzer() {
           (analysis?.failedLogins?.length || 0) + (analysis?.suspiciousAgents?.length || 0),
           analysis?.sensitiveAccess?.length || 0,
         ],
-        backgroundColor: ["#FF4444", "#FF9999", "#FFCC99", "#66CCCC"],
+        backgroundColor: ["#ff4747", "#fbbf24", "#2563eb", "#0ea5e9"],
       },
     ],
   };
@@ -160,23 +178,26 @@ function LogAnalyzer() {
     scales: {
       y: {
         beginAtZero: true,
-        title: {
-          display: true,
-          text: "Number of Threats",
-        },
+        title: { display: true, text: "Number of Threats" },
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: "Threat Severity Distribution",
-      },
+      title: { display: true, text: "Threat Severity Distribution" },
+      legend: { display: false },
     },
   };
 
   return (
-    <div className="log-analyzer-container">
+    <div className={dark ? "log-analyzer-container dark" : "log-analyzer-container"}>
       <h2>Log File Analyzer</h2>
+      <button
+        className="mode-toggle-btn"
+        style={{ position: "absolute", right: 20, top: 20 }}
+        onClick={() => setDark(d => !d)}
+        aria-label="Toggle dark mode"
+      >
+        {dark ? "🌞 Light Mode" : "🌚 Dark Mode"}
+      </button>
       <form onSubmit={handleUpload}>
         <input
           type="file"
@@ -185,6 +206,16 @@ function LogAnalyzer() {
           className="file-input"
           aria-label="Select log file"
         />
+        <label>
+          Brute-Force Threshold:
+          <input
+            type="number"
+            min={1}
+            value={threshold}
+            onChange={e => setThreshold(Number(e.target.value))}
+            className="brute-threshold-input"
+          />
+        </label>
         <button
           type="submit"
           className="analyze-btn"
@@ -200,26 +231,25 @@ function LogAnalyzer() {
         <>
           <div className="summary">
             <h3>Analysis Summary</h3>
-            <div>Total Lines: {analysis.totalLines}</div>
-            <div>Failed Logins: {analysis.failedLogins?.length}</div>
-            <div>Access to Sensitive URLs: {analysis.sensitiveAccess?.length}</div>
+            <div>Total lines: {analysis.totalLines}</div>
+            <div>Unique IPs: {analysis.uniqueIps}</div>
+            <div>Failed Logins: {analysis.failedLogins.length} {severityBadge("Medium")}</div>
+            <div>Access to Sensitive URLs: {analysis.sensitiveAccess.length} {severityBadge("Low")}</div>
             <div>
-              Brute Force IPs:{" "}
-              {analysis.bruteForceIps.length === 0 ? (
-                "None"
-              ) : (
-                analysis.bruteForceIps.map(ip => (
-                  <span className="brute-force-ip" key={ip.ip}>
-                    {ip.ip} ({ip.count} attempts)
-                  </span>
-                ))
-              )}
+              Brute Force IPs: {analysis.bruteForceIps.length} {severityBadge("High")}
+              {analysis.bruteForceIps.length === 0
+                ? ""
+                : analysis.bruteForceIps.map(ip => (
+                    <span className="brute-force-ip" key={ip.ip}>
+                      {ip.ip} ({ip.count} failed logins)
+                    </span>
+                  ))}
             </div>
-            <div>SQL Injection Attempts: {analysis.sqlInjection?.length}</div>
-            <div>XSS Attempts: {analysis.xss?.length}</div>
-            <div>Directory Traversal: {analysis.dirTraversal?.length}</div>
-            <div>Suspicious User-Agents: {analysis.suspiciousAgents?.length}</div>
-            <button
+            <div>SQL Injection Attempts: {analysis.sqlInjection.length} {severityBadge("Critical")}</div>
+            <div>XSS Attempts: {analysis.xss.length} {severityBadge("High")}</div>
+            <div>Directory Traversal Attempts: {analysis.dirTraversal.length} {severityBadge("High")}</div>
+            <div>Suspicious User-Agents: {analysis.suspiciousAgents.length} {severityBadge("Medium")}</div>
+            <br /><button
               className="download-btn"
               onClick={handleDownload}
               aria-label="Download CSV report"
@@ -227,81 +257,52 @@ function LogAnalyzer() {
               Download CSV Report
             </button>
           </div>
-
-          {/* Threat Severity Chart */}
           <div className="chart-container">
-            <h3>Threat Severity Distribution</h3>
             <Bar data={chartData} options={chartOptions} />
           </div>
 
-          {/* Filter Controls */}
-          <div className="filters">
-            <h3>Filter Log Preview</h3>
+          <div className="filters" style={{ margin: "1em 0" }}>
             <label>
-              <input
-                type="checkbox"
-                name="failed"
-                checked={filters.failed}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="failed" checked={filters.failed} onChange={handleFilterChange} />
               Failed Logins
             </label>
             <label>
-              <input
-                type="checkbox"
-                name="sensitive"
-                checked={filters.sensitive}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="sensitive" checked={filters.sensitive} onChange={handleFilterChange} />
               Sensitive URLs
             </label>
             <label>
-              <input
-                type="checkbox"
-                name="sqli"
-                checked={filters.sqli}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="sqli" checked={filters.sqli} onChange={handleFilterChange} />
               SQL Injection
             </label>
             <label>
-              <input
-                type="checkbox"
-                name="xss"
-                checked={filters.xss}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="xss" checked={filters.xss} onChange={handleFilterChange} />
               XSS
             </label>
             <label>
-              <input
-                type="checkbox"
-                name="dir"
-                checked={filters.dir}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="dir" checked={filters.dir} onChange={handleFilterChange} />
               Directory Traversal
             </label>
             <label>
-              <input
-                type="checkbox"
-                name="agent"
-                checked={filters.agent}
-                onChange={handleFilterChange}
-              />
+              <input type="checkbox" name="agent" checked={filters.agent} onChange={handleFilterChange} />
               Suspicious Agents
             </label>
+            <input
+              type="text"
+              placeholder="Search IP or keyword"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="search-input"
+            />
           </div>
 
-          {/* Log Preview with Pagination */}
-          {filteredLines.length > 0 && (
+          {displayedLines.length > 0 && (
             <div className="log-viewer">
-              <h3>Log Preview ({filteredLines.length} lines)</h3>
+              <h3>Log Preview ({displayedLines.length} lines)</h3>
               <FixedSizeList
                 height={400}
                 width="100%"
-                itemCount={filteredLines.length}
-                itemSize={20}
+                itemCount={displayedLines.length}
+                itemSize={24}
               >
                 {LogLine}
               </FixedSizeList>

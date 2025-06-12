@@ -1,30 +1,32 @@
 # Log File Analyzer
 
-A modern web app for analyzing server log files and detecting security threats like brute-force attempts, SQL injection, XSS, directory traversal, suspicious user agents, and more.  
-Get instant summary, chart visualization, filtering, and downloadable CSV reports.
+A modern web app for analyzing and visualizing server log files for security threats. Instantly detects failed logins, brute-force attacks, SQL injection, XSS, directory traversal, suspicious user agents, and more. Features interactive charts, filtering, dark mode, search, line numbers, and CSV export—perfect for portfolios or real-world security use.
 
 ---
 
-## Features
+## 🚀 Features
 
-- **Upload & Analyze:** Instantly scans `.log` or `.txt` files for security events.
+- **Upload & Analyze:** Instantly scan `.log` or `.txt` files for security threats.
 - **Threat Detection:**  
-  - Failed logins and brute-force IPs  
+  - Failed logins & brute-force attempts (adjustable threshold)  
   - SQL injection, XSS, directory traversal  
-  - Sensitive URL access (e.g. `/admin`, `/wp-login.php`)  
-  - Suspicious user agents (e.g. sqlmap, nmap)
-- **Visualization:** Severity bar chart (Chart.js).
-- **Filter Preview:** Show/hide specific threat types in the log view.
-- **CSV Export:** Download a CSV report of findings.
-- **Fast, Responsive UI:** React frontend with virtualized preview for large logs.
+  - Sensitive endpoint access  
+  - Suspicious user agents
+- **Modern UI:**  
+  - Interactive bar chart (Chart.js)  
+  - Beautiful dark mode & responsive dashboard  
+  - Search/filter logs by IP or keyword  
+  - Severity-based color highlights & badges  
+  - Line numbers for log navigation
+- **Reports:**  
+  - Downloadable CSV summary
 
 ---
 
-## Getting Started
+## ⚡ Getting Started
 
-### 1. Backend Setup
+### 1. **Clone the Repository**
 
 ```bash
-cd backend
-npm install
-node server.js
+git clone https://github.com/your-username/log-analyzer.git
+cd log-analyzer

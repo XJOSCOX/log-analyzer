@@ -28,5 +28,5 @@ A modern web app for analyzing and visualizing server log files for security thr
 ### 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/log-analyzer.git
+git clone https://github.com/XJOSCOX/log-analyzer.git
 cd log-analyzer
